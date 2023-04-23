@@ -1,23 +1,35 @@
 package me.reratos.dockerizerapplication.interfaces.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.reratos.dockerizerapplication.domain.entities.Usuario;
+import me.reratos.dockerizerapplication.domain.service.UsuarioService;
+import me.reratos.dockerizerapplication.interfaces.dtos.UsurioDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.time.LocalDate;
 
 @Slf4j
-@RestController("/usuarios")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
+    private final UsuarioService usuarioService;
+
     @PostMapping
-    public ResponseEntity<Object> criar(Map<String, Object> usuarioDto) {
+    public ResponseEntity<Object> criar(@RequestBody UsurioDTO usuarioDto) {
         log.info("Criando usuario");
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        var user = usuarioService.criarUsuario(Usuario.builder()
+                        .nome(usuarioDto.getNome())
+                        .sexo(usuarioDto.getSexo())
+                        .dataNascimento(LocalDate.parse(usuarioDto.getDataNascimento()))
+                .build());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(user);
     }
 
     @GetMapping
