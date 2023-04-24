@@ -6,4 +6,5 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}/test
+      uri: mongodb+srv://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}/?retryWrites=true&w=majority
+      database: ${MONGODB_DATABASE}
